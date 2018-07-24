@@ -1,5 +1,4 @@
 const parser = require('./rockstar-parser')
-const fs = require('fs-extra')
 
 const generators = {
 	Block: b => `{${b.s.map(expr).join('')}}`,
@@ -70,11 +69,12 @@ function ast(statements) {
 }
 
 async function compile(filename) {
-	const statements = parser.parse(await fs.readFile(filename, 'utf-8'))
-	return compileString(statements)
+	const fs = require('fs-extra')
+	return compileString(await fs.readFile(filename, 'utf-8'))
 }
 
-async function compileString(statements) {
+async function compileString(string) {
+	const statements = parser.parse(string)
 	const program = ast(statements)
 	if (statements.length !== 0) throw new Error('Too many blank lines, left last block with some program left')
 	return program.map(expr).join('')
