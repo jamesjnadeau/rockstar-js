@@ -1,5 +1,5 @@
 {
-  name: "rockstar-js",
+  "name": "rockstar-js",
   "dependencies": {
     "fs-extra": "^7.0.0",
     "pegjs": "^0.10.0"
