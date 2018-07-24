@@ -69,8 +69,7 @@ function ast(statements) {
 }
 
 async function compile(filename) {
-	const fs = require('fs-extra')
-	return compileString(await fs.readFile(filename, 'utf-8'))
+	return await compileString(await fs.readFile(filename, 'utf-8'))
 }
 
 async function compileString(string) {
@@ -82,6 +81,7 @@ async function compileString(string) {
 
 
 if (require.main === module) {
+	const fs = require('fs-extra')
 	compile(process.argv[2]).then(
 		code => fs.writeFile(process.argv[2].replace('.rock', '.js'), code)
 	).then(null, e => {
