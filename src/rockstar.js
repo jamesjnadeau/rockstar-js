@@ -71,15 +71,28 @@ function ast(statements) {
 
 async function compile(filename) {
 	const statements = parser.parse(await fs.readFile(filename, 'utf-8'))
+	return compileString(statements)
+}
+
+async function compileString(statements) {
 	const program = ast(statements)
 	if (statements.length !== 0) throw new Error('Too many blank lines, left last block with some program left')
 	return program.map(expr).join('')
 }
 
-compile(process.argv[2]).then(
-	code => fs.writeFile(process.argv[2].replace('.rock', '.js'), code)
-).then(null, e => {
-	console.error(e)
-	process.exit(1)
-})
+
+if (require.main === module) {
+	compile(process.argv[2]).then(
+		code => fs.writeFile(process.argv[2].replace('.rock', '.js'), code)
+	).then(null, e => {
+		console.error(e)
+		process.exit(1)
+	})
+} else {
+    module.exports = {
+	    compile,
+	    compileString,
+    }
+}
+
 
